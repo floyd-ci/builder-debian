@@ -1,0 +1,13 @@
+language: minimal
+
+env:
+  - DISTRIBUTION=stable
+  - DISTRIBUTION=testing
+  - DISTRIBUTION=unstable
+
+script:
+  - docker build --build-arg DISTRIBUTION=$DISTRIBUTION --tag floydci/debian:$DISTRIBUTION .
+
+after_success:
+  - echo $DOCKER_PASSWORD | docker login --username $DOCKER_USERNAME --password-stdin
+  - docker push floydci/debian:$DISTRIBUTION
